@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+printf "Content-type: text/plain; charset=iso-8859-1\n\n"
+
+input_text="$(cat -)"
+
+if [[ -n "$input_text" ]];then
+        name="$(awk -v key="name" 'BEGIN{RS="&";FS="="} {if ($1==key){print $2}}' <<<"${QUERY_STRING}")"
+        : ${name:="image"}
+        format="$(awk -v key="format" 'BEGIN{RS="&";FS="="} {if ($1==key){print $2}}' <<<"${QUERY_STRING}")"
+        : ${format:="png"}
+        printf "store to file name: ${name}\n"
+        dot -T${format} -o /tmp/images/${name}.${format} <<<"${input_text}"
+else
+  printf "no input provided\n"
+fi
+
+
